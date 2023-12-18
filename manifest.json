@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "Demo chrome extension",
+    "description": "A demonstration of a bespoke chrome extension being used to populate form fields",
+    "version": "1.0",
+    "action": {
+        "default_title": "Click here!",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "scripting",
+        "activeTab"
+    ]
+}
