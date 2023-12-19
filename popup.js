@@ -1,56 +1,3 @@
-document.getElementById('getForm').addEventListener('click', function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.scripting.executeScript({
-      target: { tabId: tabs[0].id },
-      function: getFormInfo,
-    });
-  });
-});
-
-//get form data
-async function getFormInfo()
-{
-  const formElements = document.querySelectorAll('form')[0];
-
-  const formData = Array.from(formElements).map(element => {
-    return {
-      id: element.id,
-      type: element.type
-    };
-  });
-
-  console.log(formData);
-  alert(JSON.stringify(formData, null, 2));
-}
-
-
-document.getElementById('fillForm').addEventListener('click', function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.scripting.executeScript({
-      target: { tabId: tabs[0].id },
-      function: fillForm,
-    });
-  });
-});
-
-//fill form data
-function fillForm() {
-  const formData = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    message: '1234567890',
-  };
-
-  for (const field in formData) {
-    const element = document.getElementById(field);
-    if (element) {
-      element.value = formData[field];
-    }
-  }
-}
-
-
-
 document.getElementById('chatgpt').addEventListener('click', function () {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.scripting.executeScript({
@@ -62,17 +9,16 @@ document.getElementById('chatgpt').addEventListener('click', function () {
 
 
 async function sendMessage() {
+  //get user info
   const formElements = document.querySelectorAll('form')[0];
 
   const formData = Array.from(formElements).map(element => {
-    return {
-      id: element.id,
-      type: element.type
-    };
+    return element.name;
   });
+  console.log("Get formData:::", formData);
 
   // Replace 'YOUR_API_KEY' with your actual API key
-const apiKey = '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';
+const apiKey = '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';
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
 
@@ -88,7 +34,7 @@ const apiUrl = 'https://api.openai.com/v1/chat/completions';
           role: "system",
           content: "You are a helpful assistant designed to output JSON.",
         },
-        { role: "user", content: `Generate output ${formData}` },
+        { role: "user", content: `Provide dummy data for these fields ${formData}` },
       ],
       model: "gpt-3.5-turbo-1106",
       response_format: { type: "json_object" },
@@ -97,10 +43,69 @@ const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   const responseData = await response.json();
   // console.log('responseData',responseData)
-  alert( responseData.choices[0].message.content, null);  
-  // return responseData.choices[0].message.content;
+  console.log(" responseData.choices[0].message.content:::", responseData.choices[0].message.content )
+  const chatRes = JSON.parse(responseData.choices[0].message.content);
+  console.log("chatRes", chatRes)
+  console.log('name:::', chatRes.name)
 
+  for (const field in chatRes)
+  {
+       const element = document.getElementById(field);
+       if (element) {
+         element.value = chatRes[field];
+       }
+   }
+  // return responseData.choices[0].message.content;
 }
+
+// document.getElementById('getForm').addEventListener('click', function () {
+//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//     chrome.scripting.executeScript({
+//       target: { tabId: tabs[0].id },
+//       function: getFormInfo,
+//     });
+//   });
+// });
+
+//get form data
+// async function getFormInfo()
+// {
+//   const formElements = document.querySelectorAll('form')[0];
+
+//   const formData = Array.from(formElements).map(element => {
+//     return {
+//       id: element.name,
+//       type: element.type
+//     };
+//   });
+
+//   console.log(formData);
+//   alert(JSON.stringify(formData, null, 2));
+// }
+
+
+// document.getElementById('fillForm').addEventListener('click', function () {
+//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//     chrome.scripting.executeScript({
+//       target: { tabId: tabs[0].id },
+//       function: fillForm,
+//     });
+//   });
+// });
+
+
+// fill form data
+// function fillForm(formData) {
+//   console.log("formData Inside fillForm", formData);
+//   for (const field in formData) {
+//     const element = document.getElementById(field);
+//     if (element) {
+//       element.value = formData[field];
+//     }
+//   }
+// }
+
+
 
 
 
