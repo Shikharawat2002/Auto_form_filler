@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Demo chrome extension",
-    "description": "A demonstration of a bespoke chrome extension being used to populate form fields",
+    "name": "Dummy form filler",
+    "description": "Fill input fields with relatable data using chatgpt",
     "version": "1.0",
     "action": {
         "default_title": "Click here!",
@@ -17,6 +17,9 @@
             ]
         }
     ],
+    "icons": {
+        "128": "icons.png"
+    },
     "permissions": [
         "scripting",
         "activeTab",
